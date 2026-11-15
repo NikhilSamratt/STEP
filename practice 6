@@ -1,0 +1,55 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
+
+class Practice6 {
+    static class Timetable {
+        String name;
+        List<String> periods;
+
+        Timetable(String name) {
+            this.name = name;
+            periods = new ArrayList<>();
+        }
+
+        Timetable copy(String newName) {
+            Timetable newTable = new Timetable(newName);
+            newTable.periods = new ArrayList<>(periods);
+            return newTable;
+        }
+
+        void setPeriod(int period, String subject) {
+            if (period >= 1 && period <= periods.size()) {
+                periods.set(period - 1, subject);
+            }
+        }
+
+        void display() {
+            System.out.println(name + ": " + periods);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        String originalName = sc.next();
+        int n = sc.nextInt();
+
+        Timetable original = new Timetable(originalName);
+
+        for (int i = 0; i < n; i++) {
+            original.periods.add(sc.next());
+        }
+
+        String newName = sc.next();
+        Timetable copy = original.copy(newName);
+
+        int period = sc.nextInt();
+        String subject = sc.next();
+
+        copy.setPeriod(period, subject);
+
+        original.display();
+        copy.display();
+    }
+}

@@ -1,0 +1,153 @@
+import java.util.Scanner;
+
+class Assignment4 {
+    static class Node {
+        String name;
+        Node prev;
+        Node next;
+
+        Node(String name) {
+            this.name = name;
+        }
+    }
+
+    static Node head = null;
+    static Node current = null;
+
+    static void open(String name) {
+        Node newNode = new Node(name);
+
+        if (head == null) {
+            head = newNode;
+            current = newNode;
+            return;
+        }
+
+        newNode.prev = current;
+        newNode.next = current.next;
+
+        if (current.next != null) {
+            current.next.prev = newNode;
+        }
+
+        current.next = newNode;
+        current = newNode;
+    }
+
+    static void close() {
+        if (current == null) {
+            return;
+        }
+
+        Node next = current.next;
+        Node previous = current.prev;
+
+        if (previous != null) {
+            previous.next = next;
+        } else {
+            head = next;
+        }
+
+        if (next != null) {
+            next.prev = previous;
+            current = next;
+        } else {
+            current = previous;
+        }
+    }
+
+    static void back() {
+        if (current != null && current.prev != null) {
+            current = current.prev;
+        } else {
+            System.out.println("BACK: already at first tab");
+        }
+    }
+
+    static void forward() {
+        if (current != null && current.next != null) {
+            current = current.next;
+        }
+    }
+
+    static void printTabs() {
+        Node temp = head;
+
+        while (temp != null) {
+            if (temp == current) {
+                System.out.print("[" + temp.name + "]");
+            } else {
+                System.out.print(temp.name);
+            }
+
+            if (temp.next != null) {
+                System.out.print(" <-> ");
+            }
+
+            temp = temp.next;
+        }
+
+        System.out.println();
+    }
+
+    static void printBackward() {
+        Node temp = head;
+
+        if (temp == null) {
+            return;
+        }
+
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+
+        while (temp != null) {
+            System.out.print(temp.name);
+
+            if (temp.prev != null) {
+                System.out.print(" <-> ");
+            }
+
+            temp = temp.prev;
+        }
+
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = Integer.parseInt(sc.nextLine());
+
+        for (int i = 0; i < n; i++) {
+            String command = sc.nextLine();
+
+            if (command.startsWith("OPEN ")) {
+                String name = command.substring(5);
+                open(name);
+                System.out.print("OPEN " + name + ": ");
+                printTabs();
+            } else if (command.equals("CLOSE")) {
+                String name = current == null ? "" : current.name;
+                close();
+                System.out.print("CLOSE " + name + ": ");
+                printTabs();
+            } else if (command.equals("BACK")) {
+                if (current != null && current.prev == null) {
+                    back();
+                } else {
+                    back();
+                    System.out.print("BACK: ");
+                    printTabs();
+                }
+            } else if (command.equals("FORWARD")) {
+                forward();
+                System.out.print("FORWARD: ");
+                printTabs();
+            } else if (command.equals("PRINT BACKWARD")) {
+                System.out.print("Backward: ");
+                printBackward();
+            }
+        }
+    }
+}
